@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+/* Input fields - autofill fix */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: white !important;
+  -webkit-box-shadow: 0 0 0 1000px #0f0f0f inset !important;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+/* Textarea - autofill fix */
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+textarea:-webkit-autofill:active {
+  -webkit-text-fill-color: white !important;
+  -webkit-box-shadow: 0 0 0 1000px #0f0f0f inset !important;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+/* Select/Dropdown - autofill fix */
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus,
+select:-webkit-autofill:active {
+  -webkit-text-fill-color: white !important;
+  -webkit-box-shadow: 0 0 0 1000px #0f0f0f inset !important;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+/* Select options - force white text */
+select option {
+  background-color: #0f0f0f;
+  color: white;
+}
+
+@layer utilities {
+  .shake {
+    animation: shake 0.35s ease-in-out;
+  }
+
+  @keyframes shake {
+    0% { transform: translateX(0); }
+    20% { transform: translateX(-4px); }
+    40% { transform: translateX(4px); }
+    60% { transform: translateX(-3px); }
+    80% { transform: translateX(3px); }
+    100% { transform: translateX(0); }
+  }
+}
