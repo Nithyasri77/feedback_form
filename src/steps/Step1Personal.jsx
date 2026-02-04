@@ -11,8 +11,8 @@ import {
   Upload,
 } from "lucide-react";
 import { useFormContext, useWatch } from "react-hook-form";
-import CompanyLogo from "../assets/FINAL.svg";
-import CompanyName from "../assets/LogotextwithMotto.svg";
+import CompanyLogo from "../../public/images/FINAL.svg";
+import CompanyName from "../../public/images/LogotextwithMotto.svg";
 
 
 const Step1Personal = ({ onNext, shake }) => {

@@ -1,7 +1,7 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
-import CompanyLogo from "../../assets/FINAL.svg";
-import CompanyName from "../../assets/Logotextonly.svg";
+import CompanyLogo from "../../../public/images/FINAL.svg";
+import CompanyName from "../../../public/images/Logotextonly.svg";
 
 const TopBar = ({ onBack }) => {
   return (
