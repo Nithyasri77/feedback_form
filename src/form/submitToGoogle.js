@@ -13,7 +13,8 @@ export async function submitToGoogle(data) {
 
     return { success: true };
   } catch (error) {
-    // console.error("Submission error:", error);
+    // console.error("Submission error:", error);  
+    // add a space or comment anywhere
     throw error;
   }
 }
