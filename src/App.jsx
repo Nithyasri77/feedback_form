@@ -19,7 +19,6 @@ const stepFields = {
     "fullName",
     "address",
     "homePhone",
-    "alternatePhone",
     "email",
     "panId",
     "aadharNumber",
@@ -101,7 +100,7 @@ const nextStep = async () => {
           {step > 1 && step < 6 && <TopBar onBack={() => setStep(step - 1)} />}
 
           {/* PROGRESS BAR */}
-          {step > 1 && step < 6 && <ProgressBar currentStep={step} />}
+          {step > 1 && step < 6 && <ProgressBar currentStep={step}  setStep={setStep}/>}
 
            <BackgroundFileUploader currentStep={step} />
 

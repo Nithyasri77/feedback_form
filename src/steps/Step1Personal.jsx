@@ -165,7 +165,7 @@ const Step1Personal = ({ onNext, shake }) => {
           {/* ALTERNATE PHONE */}
           <div className="mb-4">
             <label className="block mb-2 font-medium">
-              Alternate Phone <span className="text-red-400">*</span>
+              Alternate Phone 
             </label>
             <input
               {...register("alternatePhone", {
@@ -210,7 +210,7 @@ const Step1Personal = ({ onNext, shake }) => {
                   clearErrors("panId");
                 },
               })}
-              placeholder="PAN Number"
+               placeholder="e.g. ABCDE1234F"
               className="w-full p-3 sm:p-4 rounded-md bg-[#0f0f0f] text-white placeholder-gray-400 focus:outline-none"
             />
             {showErrors && errors.panId && (
@@ -232,7 +232,7 @@ const Step1Personal = ({ onNext, shake }) => {
                   clearErrors("aadharNumber");
                 },
               })}
-              placeholder="Aadhaar Number"
+               placeholder="e.g. 8234 5678 9012"
               className="w-full p-3 sm:p-4 rounded-md bg-[#0f0f0f] text-white placeholder-gray-400 focus:outline-none"
             />
             {showErrors && errors.aadharNumber && (

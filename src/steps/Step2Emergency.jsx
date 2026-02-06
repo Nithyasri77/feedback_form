@@ -36,15 +36,13 @@ const Step2Emergency = ({ onNext, shake }) => {
     "Coimbatore",
   ];
 
-
   return (
     <div className="min-h-screen bg-[#000001] text-white overflow-x-hidden">
-
       {/* FORM CONTAINER */}
       <div className="max-w-md sm:max-w-lg  px-4 sm:px-6  mx-auto pt-4 pb-8">
-
-        <div className={`bg-[#1a1a1a] rounded-md p-6 shadow-lg ${ shake ? "shake" : "" }`}>
-
+        <div
+          className={`bg-[#1a1a1a] rounded-md p-6 shadow-lg ${shake ? "shake" : ""}`}
+        >
           {/* SECTION TITLE */}
           <h1 className="text-2xl font-semibold mb-8">
             Emergency Contact Information
@@ -92,60 +90,36 @@ const Step2Emergency = ({ onNext, shake }) => {
 
           {/* CITY */}
           <div className="relative mb-4">
-            <label className="block mb-2 font-medium">
-              City 
-            </label>
+            <label className="block mb-2 font-medium">City</label>
 
-            <select
+            <input
+              type="text"
+              placeholder="Enter city"
               {...register("emergencyCity")}
-              className="w-full p-3 sm:p-4 rounded-md bg-[#0f0f0f] text-gray-200 appearance-none cursor-pointer focus:outline-none"
-            >
-              <option value="">Select City</option>
-              {CITIES.map((city) => (
-                <option key={city} value={city}>
-                  {city}
-                </option>
-              ))}
-            </select>
-
-             <span className="absolute right-4 top-12 text-gray-400 pointer-events-none">
-              <ChevronDown />
-            </span>
-
-           
+              className="w-full p-3 sm:p-4 rounded-md bg-[#0f0f0f] text-gray-200 focus:outline-none"
+            />
           </div>
 
           {/* STATE */}
           <div className="relative mb-4">
-
             <label className="block mb-2 font-medium">
               State <span className="text-red-400">*</span>
             </label>
 
-            <select
+            <input
+              type="text"
+              placeholder="Enter state"
               {...register("emergencyState", {
                 onChange: () => clearErrors("emergencyState"),
               })}
-              className="w-full p-3 sm:p-4 rounded-md bg-[#0f0f0f] text-gray-200 appearance-none cursor-pointer focus:outline-none"
-            >
-              <option value="">Select State</option>
-              {STATES.map((state) => (
-                <option key={state} value={state}>
-                  {state}
-                </option>
-              ))}
-            </select>
-
-            <span className="absolute right-4 top-12 text-gray-400 pointer-events-none">
-              <ChevronDown />
-            </span>
+              className="w-full p-3 sm:p-4 rounded-md bg-[#0f0f0f] text-gray-200 focus:outline-none"
+            />
 
             {showErrors && errors.emergencyState && (
               <p className="mt-1 text-sm text-red-400">
                 * {errors.emergencyState.message}
               </p>
             )}
-
           </div>
 
           {/* ZIP */}
