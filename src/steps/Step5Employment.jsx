@@ -66,7 +66,7 @@ const Step5Employment = ({ onNext, shake, isSubmitting }) => {
           </div>
         </div>
 
-        {/* EXPERIENCED CONTENT */}
+        {/* EXPERIENCED CONTENT FORM CONTAINER*/}
 
         {employmentType === "experienced" && (
           <div>
