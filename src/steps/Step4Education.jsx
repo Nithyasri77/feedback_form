@@ -110,7 +110,7 @@ const Step4Education = ({onNext, shake}) => {
               </label>
               <input
                 {...register(`education.${index}.institution`, { onChange: () => clearErrors(`education.${index}.institution`) })}
-                placeholder="Institution Name"
+                placeholder="e.g. IIT"
                 className="w-full p-3 sm:p-4 rounded-md bg-[#0f0f0f] text-white placeholder-gray-400 focus:outline-none"
               />
               {showErrors && errors.education?.[index]?.institution && (
@@ -127,7 +127,7 @@ const Step4Education = ({onNext, shake}) => {
               </label>
               <input
                 {...register(`education.${index}.location`, { onChange: () => clearErrors(`education.${index}.location`) })}
-                placeholder="e.g., New York"
+                placeholder="e.g., Puducherry"
                 className="w-full p-3 sm:p-4 rounded-md bg-[#0f0f0f] text-white placeholder-gray-400 focus:outline-none"
               />
 

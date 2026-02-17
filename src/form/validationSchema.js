@@ -104,6 +104,10 @@ export default yup.object({
     yup.object({
       organization: yup.string().required("Organization name is required"),
 
+      location: yup.string().required("Organization location is required"),
+
+      workMode: yup.string().required("Work mode is required"),
+
       designation: yup.string().required("Designation is required"),
 
       from: yup
@@ -121,6 +125,12 @@ export default yup.object({
         ),
 
       ctc: yup.string().required("Monthly CTC is required"),
+
+      payslip: yup.mixed().required("Payslip upload is required"),
+
+      experienceCertificate: yup
+        .mixed()
+        .required("Experience certificate is required"),
     }),
   ),
 

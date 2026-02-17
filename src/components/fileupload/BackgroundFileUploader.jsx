@@ -18,9 +18,9 @@ const BackgroundFileUploader = ({ currentStep }) => {
         // console.log("Files to upload:", proof);
 
         uploadFilesToDrive(proof, fullName || "Unknown")
-          .then((links) => {
-            // console.log("Background upload complete:", links);
-            setValue("proofFiles", links);
+          .then((result) => {
+            setValue("proofFiles", result.links);
+            setValue("submissionFolderId", result.folderId);
           })
           .catch((error) => {
             console.error("Background upload failed:", error);

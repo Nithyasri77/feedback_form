@@ -13,6 +13,8 @@ import {
 import { useFormContext, useWatch } from "react-hook-form";
 import CompanyLogo from "../../public/images/FINAL.svg";
 import CompanyName from "../../public/images/LogotextwithMotto.svg";
+import { isFileTooLarge, MAX_FILE_MB } from "@/utils/fileValidation";
+
 
 
 const Step1Personal = ({ onNext, shake }) => {
@@ -25,7 +27,7 @@ const Step1Personal = ({ onNext, shake }) => {
     formState: { errors },
   } = useFormContext();
 
-  const { showErrors } = useFormUI();
+  const { showErrors, setShowErrors } = useFormUI();
   
   const [isUploading, setIsUploading] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -113,7 +115,7 @@ const Step1Personal = ({ onNext, shake }) => {
               {...register("fullName", {
                 onChange: () => clearErrors("fullName"),
               })}
-              placeholder="Full Name"
+              placeholder="e.g. John Doe"
               className="w-full p-3 sm:p-4 rounded-md bg-[#0f0f0f] text-white placeholder-gray-400 focus:outline-none"
             />
             {showErrors && errors.fullName && (
@@ -132,7 +134,7 @@ const Step1Personal = ({ onNext, shake }) => {
               {...register("address", {
                 onChange: () => clearErrors("address"),
               })}
-              placeholder="Full Address"
+              placeholder="e.g. No.24, MG Road, Anna Nagar, Chennai"
               rows={4}
               className="w-full p-3 sm:p-4 rounded-md bg-[#0f0f0f] text-white placeholder-gray-400 resize-y min-h-30 focus:outline-none"
             />
@@ -152,7 +154,7 @@ const Step1Personal = ({ onNext, shake }) => {
               {...register("homePhone", {
                 onChange: () => clearErrors("homePhone"),
               })}
-              placeholder="Home Phone Number"
+              placeholder="e.g. 7890123456"
               className="w-full p-3 sm:p-4 rounded-md bg-[#0f0f0f] text-white placeholder-gray-400 focus:outline-none"
             />
             {showErrors && errors.homePhone && (
@@ -171,7 +173,7 @@ const Step1Personal = ({ onNext, shake }) => {
               {...register("alternatePhone", {
                 onChange: () => clearErrors("alternatePhone"),
               })}
-              placeholder="Alternate Phone Number"
+              placeholder="e.g. 9988766554"
               className="w-full p-3 sm:p-4 rounded-md bg-[#0f0f0f] text-white placeholder-gray-400 focus:outline-none"
             />
             {showErrors && errors.alternatePhone && (
@@ -188,7 +190,7 @@ const Step1Personal = ({ onNext, shake }) => {
             </label>
             <input
               {...register("email", { onChange: () => clearErrors("email") })}
-              placeholder="Email Address"
+              placeholder="e.g. johndoe@gmail.com"
               className="w-full p-3 sm:p-4 rounded-md bg-[#0f0f0f] text-white placeholder-gray-400 focus:outline-none"
             />
             {showErrors && errors.email && (
@@ -243,10 +245,11 @@ const Step1Personal = ({ onNext, shake }) => {
           </div>
 
           {/* DOB */}
-          <div className="relative mb-4">
+          <div className=" mb-4">
             <label className="block mb-2 font-medium">
               Birth Date <span className="text-red-400">*</span>
             </label>
+            <div className="relative">
             <input
               type="date"
               {...register("birthDate", {
@@ -254,9 +257,11 @@ const Step1Personal = ({ onNext, shake }) => {
               })}
               className="w-full p-3 sm:p-4 rounded-md bg-[#0f0f0f] text-white focus:outline-none"
             />
-            <span className="absolute right-4 top-12 text-gray-400 pointer-events-none">
+            {/* <span className="absolute right-4 top-12 text-gray-400 pointer-events-none"> */}
+            <span className="absolute inset-y-0 right-4 flex items-center text-gray-400 pointer-events-none">
               <CalendarDays />
             </span>
+            </div>
             {showErrors && errors.birthDate && (
               <p className="mt-1 text-sm text-red-400">
                 * {errors.birthDate.message}
@@ -278,7 +283,7 @@ const Step1Personal = ({ onNext, shake }) => {
               <option value="">Select Marital Status</option>
               <option value="Single">Single</option>
               <option value="Married">Married</option>
-              <option value="Other">Other</option>
+              <option value="Other">Prefer not to say</option>
             </select>
             <span className="absolute right-4 top-12 text-gray-400 pointer-events-none">
               <ChevronDown />
@@ -293,7 +298,7 @@ const Step1Personal = ({ onNext, shake }) => {
           {/* FILE UPLOAD */}
           <div className="mb-4">
             <label className="block mb-2 font-medium">
-              Proof Attached <span className="text-red-400">*</span>
+              Proof Attached <span className="text-red-400">*</span> <span className="text-[12.8px] text-gray-300">(Upload your PAN, Aadhaar, bank passbook)</span>
             </label>
 
             <label
@@ -306,7 +311,7 @@ const Step1Personal = ({ onNext, shake }) => {
             >
               {uploadedFiles.length === 0 && (
                 <span className="text-center flex gap-2">
-                  Click to upload documents <Upload size={23} />
+                  Click to upload documents <Upload size={23} /> 
                 </span>
               )}
 
@@ -338,9 +343,17 @@ const Step1Personal = ({ onNext, shake }) => {
               className="sr-only"
               onChange={(e) => {
                 const newFiles = Array.from(e.target.files || []);
+                const validFiles = newFiles.filter(file => {
+                 if (isFileTooLarge(file)) {
+                 setShowErrors("proof", { type: "manual", message: `${file.name} must be under ${MAX_FILE_MB} MB` });
+                  return false;
+                 }
+                return true;
+                });
+                
                 if (newFiles.length === 0) return;
 
-                const mergedFiles = [...selectedFiles, ...newFiles];
+                const mergedFiles = [...selectedFiles, ...validFiles];
                 setSelectedFiles(mergedFiles);
                 setValue("proof", mergedFiles, { shouldValidate: true });
                 clearErrors("proof");

@@ -4,7 +4,15 @@ import { Trash2 } from "lucide-react";
 import { useFormUI } from "../context/FormUIContext";
 import { CalendarDays } from "lucide-react";
 import { Plus } from "lucide-react";
+import { ChevronDown, Upload, X } from "lucide-react";
+import { isFileTooLarge, MAX_FILE_MB } from "@/utils/fileValidation";
 import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 const Step5Employment = ({ onNext, shake, isSubmitting }) => {
   const [employmentType, setEmploymentType] = useState(null);
@@ -14,9 +22,12 @@ const Step5Employment = ({ onNext, shake, isSubmitting }) => {
     control,
     formState: { errors },
     clearErrors,
+    setValue,
   } = useFormContext();
 
-  const { showErrors } = useFormUI();
+  const { showErrors, setShowErrors } = useFormUI();
+
+  const [openTerms, setOpenTerms] = useState(false);
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -46,7 +57,12 @@ const Step5Employment = ({ onNext, shake, isSubmitting }) => {
                 name="employmentType"
                 value="fresher"
                 checked={employmentType === "fresher"}
-                onChange={() => setEmploymentType("fresher")}
+                onChange={() => {
+                  setEmploymentType("fresher");
+                  setValue("employmentType", "fresher", {
+                    shouldValidate: false,
+                  });
+                }}
                 className="w-5 h-5 accent-white"
               />
               <span className="font-medium text-gray-200">Fresher</span>
@@ -58,7 +74,12 @@ const Step5Employment = ({ onNext, shake, isSubmitting }) => {
                 name="employmentType"
                 value="experienced"
                 checked={employmentType === "experienced"}
-                onChange={() => setEmploymentType("experienced")}
+                onChange={() => {
+                  setEmploymentType("experienced");
+                  setValue("employmentType", "experienced", {
+                    shouldValidate: false,
+                  });
+                }}
                 className="w-5 h-5 accent-white"
               />
               <span className="font-medium text-gray-200">Experienced</span>
@@ -101,7 +122,7 @@ const Step5Employment = ({ onNext, shake, isSubmitting }) => {
                   </button>
                 )}
 
-                {/* ORGANIZATION */}
+                {/* ORGANIZATION NAME*/}
                 <div className="mb-4">
                   <label className="block mb-2 font-medium">
                     Organization Name <span className="text-red-400">*</span>
@@ -119,6 +140,58 @@ const Step5Employment = ({ onNext, shake, isSubmitting }) => {
                   {showErrors && errors.employment?.[index]?.organization && (
                     <p className="mt-1 text-sm text-red-400">
                       * {errors.employment[index].organization.message}
+                    </p>
+                  )}
+                </div>
+
+                {/* ORGANIZATION LOCATION */}
+                <div className="mb-4">
+                  <label className="block mb-2 font-medium">
+                    Organization Location{" "}
+                    <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    {...register(`employment.${index}.location`, {
+                      onChange: () =>
+                        clearErrors(`employment.${index}.location`),
+                    })}
+                    placeholder="e.g. Chennai, Tamil Nadu"
+                    className="w-full p-3 sm:p-4 rounded-md bg-[#0f0f0f] text-white focus:outline-none"
+                  />
+                  {showErrors && errors.employment?.[index]?.location && (
+                    <p className="mt-1 text-sm text-red-400">
+                      * {errors.employment[index].location.message}
+                    </p>
+                  )}
+                  
+                </div>
+
+                {/* WORK MODE */}
+                <div className="mb-4 relative">
+                  <label className="block mb-2 font-medium">
+                    Work Mode <span className="text-red-400">*</span>
+                  </label>
+
+                  <select
+                    {...register(`employment.${index}.workMode`, {
+                      onChange: () =>
+                        clearErrors(`employment.${index}.workMode`),
+                    })}
+                    className="w-full p-3 sm:p-4 rounded-md bg-[#0f0f0f] text-gray-200 appearance-none cursor-pointer focus:outline-none"
+                  >
+                    <option value="">Select Work Mode</option>
+                    <option value="On-site">On-Site</option>
+                    <option value="Remote">Remote</option>
+                    <option value="Hybrid">Hybrid</option>
+                  </select>
+
+                  <span className="absolute right-4 top-12 text-gray-400 pointer-events-none">
+                    <ChevronDown />
+                  </span>
+
+                  {showErrors && errors.employment?.[index]?.workMode && (
+                    <p className="mt-1 text-sm text-red-400">
+                      * {errors.employment[index].workMode.message}
                     </p>
                   )}
                 </div>
@@ -144,22 +217,25 @@ const Step5Employment = ({ onNext, shake, isSubmitting }) => {
                 </div>
 
                 {/* SERVICE PERIOD FROM */}
-                <div className="relative mb-4">
+                <div className=" mb-4">
                   <label className="block mb-2 font-medium">
                     Service Period From <span className="text-red-400">*</span>
                   </label>
 
-                  <input
-                    type="date"
-                    {...register(`employment.${index}.from`, {
-                      onChange: () => clearErrors(`employment.${index}.from`),
-                    })}
-                    className="w-full p-3 sm:p-4 rounded-md bg-[#0f0f0f] text-white focus:outline-none"
-                  />
+                  <div className="relative">
+                    <input
+                      type="date"
+                      {...register(`employment.${index}.from`, {
+                        onChange: () => clearErrors(`employment.${index}.from`),
+                      })}
+                      className="w-full p-3 sm:p-4 rounded-md bg-[#0f0f0f] text-white focus:outline-none"
+                    />
 
-                  <span className="absolute right-4 top-12 text-gray-400 pointer-events-none">
-                    <CalendarDays />
-                  </span>
+                    {/* <span className="absolute right-4 top-12 text-gray-400 pointer-events-none"> */}
+                    <span className="absolute inset-y-0 right-4 flex items-center text-gray-400 pointer-events-none">
+                      <CalendarDays />
+                    </span>
+                  </div>
 
                   {showErrors && errors.employment?.[index]?.from && (
                     <p className="mt-1 text-sm text-red-400">
@@ -169,21 +245,24 @@ const Step5Employment = ({ onNext, shake, isSubmitting }) => {
                 </div>
 
                 {/* SERVICE PERIOD TO */}
-                <div className="relative mb-4">
+                <div className=" mb-4">
                   <label className="block mb-2 font-medium">
                     Service Period To <span className="text-red-400">*</span>
                   </label>
 
-                  <input
-                    type="date"
-                    {...register(`employment.${index}.to`, {
-                      onChange: () => clearErrors(`employment.${index}.to`),
-                    })}
-                    className="w-full p-3 sm:p-4 rounded-md bg-[#0f0f0f] text-white focus:outline-none"
-                  />
-                  <span className="absolute right-4 top-12 text-gray-400 pointer-events-none">
-                    <CalendarDays />
-                  </span>
+                  <div className="relative">
+                    <input
+                      type="date"
+                      {...register(`employment.${index}.to`, {
+                        onChange: () => clearErrors(`employment.${index}.to`),
+                      })}
+                      className="w-full p-3 sm:p-4 rounded-md bg-[#0f0f0f] text-white focus:outline-none"
+                    />
+                    {/* <span className="absolute right-4 top-12 text-gray-400 pointer-events-none"> */}
+                    <span className="absolute inset-y-0 right-4 flex items-center text-gray-400 pointer-events-none">
+                      <CalendarDays />
+                    </span>
+                  </div>
 
                   {showErrors && errors.employment?.[index]?.to && (
                     <p className="mt-1 text-sm text-red-400">
@@ -192,10 +271,10 @@ const Step5Employment = ({ onNext, shake, isSubmitting }) => {
                   )}
                 </div>
 
-                {/* MONTHLY CTC */}
+                {/* MONTHLY SALARY */}
                 <div className="mb-2">
                   <label className="block mb-2 font-medium">
-                    Monthly Salary <span className="text-red-400">*</span>
+                    Last Company CTC <span className="text-red-400">*</span>
                   </label>
                   <input
                     {...register(`employment.${index}.ctc`, {
@@ -209,6 +288,169 @@ const Step5Employment = ({ onNext, shake, isSubmitting }) => {
                       * {errors.employment[index].ctc.message}
                     </p>
                   )}
+                </div>
+
+                {/* PAYSLIP UPLOAD */}
+                <div className="mb-4">
+                  <label className="block mb-2 font-medium">
+                    Payslip Upload <span className="text-red-400">*</span>
+                  </label>
+
+                  <label
+                    htmlFor={`payslipUpload-${index}`}
+                    className="w-full p-3 sm:p-4 border-2 border-dashed rounded-md
+      bg-[#0f0f0f] text-gray-300 cursor-pointer
+      flex flex-col items-center justify-center gap-2
+      transition-colors border-gray-500 hover:border-gray-400"
+                  >
+                    {!watch(`employment.${index}.payslip`)?.[0] && (
+                      <span className="text-center flex gap-2">
+                        Click to upload payslip <Upload size={22} />
+                      </span>
+                    )}
+
+                    {watch(`employment.${index}.payslip`)?.[0] && (
+                      <div className="flex items-center justify-between w-full bg-black/40 px-3 py-2 rounded-md text-sm">
+                        <span className="truncate">
+                          {watch(`employment.${index}.payslip`)[0].name}
+                        </span>
+
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setValue(`employment.${index}.payslip`, null, {
+                              shouldValidate: true,
+                            });
+                          }}
+                          className="text-red-400 hover:text-red-300"
+                        >
+                          <X size={16} />
+                        </button>
+                      </div>
+                    )}
+                  </label>
+
+                  <input
+                    type="file"
+                    id={`payslipUpload-${index}`}
+                    accept=".pdf,image/*"
+                    className="sr-only"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+
+                      if (isFileTooLarge(file)) {
+                        setError(`employment.${index}.payslip`, { type: "manual", message: `File must be under ${MAX_FILE_MB} MB` });
+                         e.target.value = "";
+                         return;
+                       }
+
+                      setValue(`employment.${index}.payslip`, [file], {
+                        shouldValidate: true,
+                      });
+
+                      clearErrors(`employment.${index}.payslip`);
+                      e.target.value = "";
+                    }}
+                  />
+
+                  {showErrors && errors.employment?.[index]?.payslip && (
+                    <p className="mt-1 text-sm text-red-400">
+                      * {errors.employment[index].payslip.message}
+                    </p>
+                  )}
+                </div>
+
+                {/* EXPERIENCE CERTIFICATE */}
+                <div className="mb-4">
+                  <label className="block mb-2 font-medium">
+                    Experience Certificate{" "}
+                    <span className="text-red-400">*</span>
+                  </label>
+
+                  <label
+                    htmlFor={`experienceUpload-${index}`}
+                    className="w-full p-3 sm:p-4 border-2 border-dashed rounded-md
+      bg-[#0f0f0f] text-gray-300 cursor-pointer
+      flex flex-col items-center justify-center gap-2
+      transition-colors border-gray-500 hover:border-gray-400"
+                  >
+                    {!watch(
+                      `employment.${index}.experienceCertificate`,
+                    )?.[0] && (
+                      <span className="text-center flex gap-2">
+                        Click to upload certificate <Upload size={22} />
+                      </span>
+                    )}
+
+                    {watch(
+                      `employment.${index}.experienceCertificate`,
+                    )?.[0] && (
+                      <div className="flex items-center justify-between w-full bg-black/40 px-3 py-2 rounded-md text-sm">
+                        <span className="truncate">
+                          {
+                            watch(
+                              `employment.${index}.experienceCertificate`,
+                            )[0].name
+                          }
+                        </span>
+
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setValue(
+                              `employment.${index}.experienceCertificate`,
+                              null,
+                              {
+                                shouldValidate: true,
+                              },
+                            );
+                          }}
+                          className="text-red-400 hover:text-red-300"
+                        >
+                          <X size={16} />
+                        </button>
+                      </div>
+                    )}
+                  </label>
+
+                  <input
+                    type="file"
+                    id={`experienceUpload-${index}`}
+                    accept=".pdf,image/*"
+                    className="sr-only"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+
+                      if (isFileTooLarge(file)) {
+                       setError(`employment.${index}.experienceCertificate`, { type: "manual", message: `File must be under ${MAX_FILE_MB} MB` });
+                        e.target.value = "";
+                        return;
+                      }
+
+                      setValue(
+                        `employment.${index}.experienceCertificate`,
+                        [file],
+                        {
+                          shouldValidate: true,
+                        },
+                      );
+
+                      clearErrors(`employment.${index}.experienceCertificate`);
+                      e.target.value = "";
+                    }}
+                  />
+
+                  {showErrors &&
+                    errors.employment?.[index]?.experienceCertificate && (
+                      <p className="mt-1 text-sm text-red-400">
+                        *{" "}
+                        {errors.employment[index].experienceCertificate.message}
+                      </p>
+                    )}
                 </div>
               </div>
             ))}
@@ -246,15 +488,14 @@ const Step5Employment = ({ onNext, shake, isSubmitting }) => {
               className="mt-1 w-5 h-5 rounded border-2 border-gray-300 bg-white focus:ring-2 focus:ring-slate-500"
             />
             <span className="leading-relaxed">
-              I hereby declare that the provided information is true and correct
-              to the best of my knowledge and belief.
+               I agree the <button  type="button" onClick={() => setOpenTerms(true)} className="text-purple-400 underline hover:text-purple-300">terms and conditions</button> of Shine Craft Technologies. I hereby confirm that the information provided by me is true and correct to the best of my knowledge. I agree to abide by the policies, rules, and regulations.
               <span className="text-red-400 ml-1">*</span>
             </span>
           </label>
         </div>
 
         {/* SUBMIT BUTTON */}
-        <div className="mt-4 mb-8">
+        <div className="mt-7 mb-8">
           <button
             type="button"
             onClick={onNext}
@@ -275,6 +516,74 @@ const Step5Employment = ({ onNext, shake, isSubmitting }) => {
           </button>
         </div>
       </div>
+      <Dialog open={openTerms} onOpenChange={setOpenTerms}>
+  <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto flex flex-col">
+    <DialogHeader>
+      <DialogTitle>Appointment Terms & Conditions</DialogTitle>
+    </DialogHeader>
+
+    {/* SCROLL AREA */}
+    <div className="overflow-y-auto pr-2 text-sm leading-relaxed space-y-5 flex-1">
+      
+      <section>
+        <h3 className="font-semibold text-base mb-1">
+          Appointment Overview
+        </h3>
+        <p>
+          You have been selected for employment with Shine Craft Technologies.
+          Your appointment is subject to successful completion of the company’s
+          onboarding and verification processes.
+        </p>
+      </section>
+
+      <section>
+        <h3 className="font-semibold text-base mb-1">
+          Duties & Responsibilities
+        </h3>
+        <ul className="list-disc pl-5 space-y-1">
+          <li>Perform duties assigned by management.</li>
+          <li>Maintain professionalism and confidentiality.</li>
+          <li>Comply with company policies and guidelines.</li>
+          <li>Protect company data and assets.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h3 className="font-semibold text-base mb-1">
+          Working Conditions
+        </h3>
+        <ul className="list-disc pl-5 space-y-1">
+          <li>Working hours are as per company policy.</li>
+          <li>Leave is governed by company leave rules.</li>
+          <li>Notice period applies as per appointment terms.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h3 className="font-semibold text-base mb-1">
+          Confidentiality & Conduct
+        </h3>
+        <p>
+          Employees must maintain strict confidentiality of company and client
+          information and follow ethical workplace practices at all times.
+        </p>
+      </section>
+
+      <section>
+        <h3 className="font-semibold text-base mb-1">
+          Employee Declaration
+        </h3>
+        <p>
+          I hereby confirm that the information provided by me is true and
+          correct to the best of my knowledge and I agree to abide by the
+          company policies.
+        </p>
+      </section>
+
+    </div>
+  </DialogContent>
+</Dialog>
+
     </div>
   );
 };

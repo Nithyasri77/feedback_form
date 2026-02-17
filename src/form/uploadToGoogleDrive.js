@@ -1,4 +1,4 @@
-export async function uploadFilesToDrive(files, userName) {
+export async function uploadFilesToDrive(files, userName, folderId = null) {
   // console.log("=== Upload Starting ===");
   // console.log("Files:", files);
 
@@ -13,16 +13,16 @@ export async function uploadFilesToDrive(files, userName) {
   const filePromises = fileArray.map((file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      
+
       reader.onload = () => {
-        const base64 = reader.result.split(',')[1]; // Remove data:image/png;base64, prefix
+        const base64 = reader.result.split(",")[1]; // Remove data:image/png;base64, prefix
         resolve({
           name: file.name,
           mimeType: file.type,
-          data: base64
+          data: base64,
         });
       };
-      
+
       reader.onerror = reject;
       reader.readAsDataURL(file);
     });
@@ -32,18 +32,19 @@ export async function uploadFilesToDrive(files, userName) {
   // console.log("Files converted to Base64");
 
   try {
-    const url = "https://script.google.com/macros/s/AKfycbzKoVvEk4aCKxa3SsTS1cyucqL6okofjJdPD4vlhodO_ymtBQdhxEMdj1nfgSPfoXiu0g/exec";
+     const url = "https://script.google.com/macros/s/AKfycbytL3Pbossrp1eK2HEawv4FBpmZi0RsFr7mj9Zk9JVi_0snEbbBtPHr2DeNa-MYCMCt_g/exec";
 
     const response = await fetch(url, {
       method: "POST",
       headers: {
-        "Content-Type": "text/plain"
+        "Content-Type": "text/plain",
       },
       body: JSON.stringify({
         action: "uploadFiles",
         userName: userName,
-        files: base64Files
-      })
+        files: base64Files,
+        folderId: folderId,
+      }),
     });
 
     const text = await response.text();
@@ -53,7 +54,10 @@ export async function uploadFilesToDrive(files, userName) {
 
     if (result.success && result.links) {
       // console.log("✅ Upload successful! Links:", result.links);
-      return result.links;
+      return {
+        links: result.links,
+        folderId: result.folderId,
+      };
     } else {
       // console.error("❌ Upload failed:", result);
       return [];

@@ -31,25 +31,35 @@ export const ToastViewport = React.forwardRef(
 );
 ToastViewport.displayName = "ToastViewport";
 
-export const Toast = React.forwardRef(({ children, ...props }, ref) => (
-  <ToastPrimitives.Root
-    ref={ref}
-    duration={Infinity} // important: disables auto close
-    {...props}
-    className={[
-      "relative flex w-full items-start gap-3",
-      "rounded-lg border",
-      "border-red-600/60 bg-gray-900 text-white",
-      "px-4 py-3 shadow-lg",
-      "data-[state=open]:animate-in",
-      "data-[state=closed]:animate-out",
-      "data-[state=closed]:fade-out-80",
-      "data-[state=open]:slide-in-from-top-2",
-    ].join(" ")}
-  >
-    {children}
-  </ToastPrimitives.Root>
-));
+export const Toast = React.forwardRef(
+  ({ children, variant = "error", duration = Infinity, ...props }, ref) => {
+    const styles = {
+      error: "border-red-600/60 bg-red-500/50 text-white",
+      success: "border-green-600/60 bg-green-500/50 text-white",
+    };
+
+    return (
+      <ToastPrimitives.Root
+        ref={ref}
+        duration={duration}
+        {...props}
+        className={[
+          "relative flex w-full items-start gap-3",
+          "rounded-lg border",
+          styles[variant],
+          "px-4 py-3 shadow-lg",
+          "data-[state=open]:animate-in",
+          "data-[state=closed]:animate-out",
+          "data-[state=closed]:fade-out-80",
+          "data-[state=open]:slide-in-from-top-2",
+        ].join(" ")}
+      >
+        {children}
+      </ToastPrimitives.Root>
+    );
+  }
+);
+
 Toast.displayName = "Toast";
 
 export const ToastTitle = React.forwardRef(({ children, ...props }, ref) => (

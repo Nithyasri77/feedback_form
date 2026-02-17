@@ -11,8 +11,8 @@ import SuccessCompletion from "./steps/SuccessCompletion";
 import TopBar from "./components/navigations/TopBar";
 import ProgressBar from "./components/navigations/ProgressBar";
 import { FormUIContext } from "./context/FormUIContext";
-import BackgroundFileUploader from './components/fileupload/BackgroundFileUploader';
-import { Toaster } from "./components/ui/toaster"
+import BackgroundFileUploader from "./components/fileupload/BackgroundFileUploader";
+import { Toaster } from "./components/ui/toaster";
 
 const stepFields = {
   1: [
@@ -51,14 +51,24 @@ const stepFields = {
     "education.0.grade",
   ],
 
-  5: [
-    "employment.0.organization",
-    "employment.0.designation",
-    "employment.0.from",
-    "employment.0.to",
-    "employment.0.ctc",
-    "declaration",
-  ],
+  5: (values) => {
+    if (values.employmentType === "fresher") {
+      return ["declaration"];
+    }
+ 
+    return [
+      "employment.0.organization",
+      "employment.0.location",
+      "employment.0.workMode",
+      "employment.0.designation",
+      "employment.0.from",
+      "employment.0.to",
+      "employment.0.ctc",
+      "employment.0.payslip",
+      "employment.0.experienceCertificate",
+      "declaration",
+    ];
+  },
 };
 
 function App() {
@@ -66,31 +76,35 @@ function App() {
   const form = useEnrollmentForm(setStep);
   const [shakeForm, setShakeForm] = useState(false);
 
+  const nextStep = async () => {
+    form.setShowErrors(true);
 
-const nextStep = async () => {
-  form.setShowErrors(true);
+    const fieldsToValidate =
+      typeof stepFields[step] === "function"
+        ? stepFields[step](form.getValues())
+        : stepFields[step];
 
-  const valid = await form.trigger(stepFields[step], {
-    shouldFocus: false,
-  });
+    const valid = await form.trigger(fieldsToValidate, {
+      shouldFocus: false,
+    });
 
-  if (!valid) {
-    //  trigger shake
-    setShakeForm(true);
+    if (!valid) {
+      //  trigger shake
+      setShakeForm(true);
 
-    // remove shake class after animation
-    setTimeout(() => setShakeForm(false), 400);
-    return;
-  }
+      // remove shake class after animation
+      setTimeout(() => setShakeForm(false), 400);
+      return;
+    }
 
-  form.setShowErrors(false);
+    form.setShowErrors(false);
 
-  if (step === 5) {
-    await form.onSubmit(form.getValues());
-  } else {
-    setStep(step + 1);
-  }
-};
+    if (step === 5) {
+      await form.onSubmit(form.getValues());
+    } else {
+      setStep(step + 1);
+    }
+  };
 
   return (
     <div>
@@ -100,22 +114,36 @@ const nextStep = async () => {
           {step > 1 && step < 6 && <TopBar onBack={() => setStep(step - 1)} />}
 
           {/* PROGRESS BAR */}
-          {step > 1 && step < 6 && <ProgressBar currentStep={step}  setStep={setStep}/>}
+          {step > 1 && step < 6 && (
+            <ProgressBar currentStep={step} setStep={setStep} />
+          )}
 
-           <BackgroundFileUploader currentStep={step} />
+          <BackgroundFileUploader currentStep={step} />
 
           {/* STEP CONTENT */}
           <form onSubmit={form.handleSubmit(form.onSubmit)}>
-            {step === 1 && <Step1Personal onNext={nextStep} shake={shakeForm}/>}
-            {step === 2 && <Step2Emergency onNext={nextStep} shake={shakeForm}/>}
-            {step === 3 && <Step3Bank onNext={nextStep} shake={shakeForm}/>}
-            {step === 4 && <Step4Education onNext={nextStep} shake={shakeForm}/>}
-            {step === 5 && <Step5Employment onNext={nextStep} shake={shakeForm}  isSubmitting={form.isSubmitting}/>}
+            {step === 1 && (
+              <Step1Personal onNext={nextStep} shake={shakeForm} />
+            )}
+            {step === 2 && (
+              <Step2Emergency onNext={nextStep} shake={shakeForm} />
+            )}
+            {step === 3 && <Step3Bank onNext={nextStep} shake={shakeForm} />}
+            {step === 4 && (
+              <Step4Education onNext={nextStep} shake={shakeForm} />
+            )}
+            {step === 5 && (
+              <Step5Employment
+                onNext={nextStep}
+                shake={shakeForm}
+                isSubmitting={form.isSubmitting}
+              />
+            )}
             {step === 6 && <SuccessCompletion />}
           </form>
         </FormProvider>
       </FormUIContext.Provider>
-        <Toaster />
+      <Toaster />
     </div>
   );
 }

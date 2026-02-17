@@ -11,31 +11,6 @@ const Step2Emergency = ({ onNext, shake }) => {
   } = useFormContext();
   const { showErrors } = useFormUI();
 
-  const STATES = [
-    "Andhra Pradesh",
-    "Tamil Nadu",
-    "Karnataka",
-    "Kerala",
-    "Maharashtra",
-    "Telangana",
-    "Delhi",
-    "Uttar Pradesh",
-    "West Bengal",
-    "Gujarat",
-  ];
-
-  const CITIES = [
-    "Chennai",
-    "Bengaluru",
-    "Hyderabad",
-    "Mumbai",
-    "Delhi",
-    "Pune",
-    "Kolkata",
-    "Ahmedabad",
-    "Coimbatore",
-  ];
-
   return (
     <div className="min-h-screen bg-[#000001] text-white overflow-x-hidden">
       {/* FORM CONTAINER */}
@@ -58,7 +33,7 @@ const Step2Emergency = ({ onNext, shake }) => {
               {...register("emergencyFullNameWithInitial", {
                 onChange: () => clearErrors("emergencyFullNameWithInitial"),
               })}
-              placeholder="Full Name with Initial"
+              placeholder="e.g. John.D"
               className="w-full p-3 sm:p-4  rounded-md bg-[#0f0f0f] text-white placeholder-gray-400 focus:outline-none"
             />
             {showErrors && errors.emergencyFullNameWithInitial && (
@@ -78,7 +53,7 @@ const Step2Emergency = ({ onNext, shake }) => {
               {...register("emergencyStreet", {
                 onChange: () => clearErrors("emergencyStreet"),
               })}
-              placeholder="Street Address"
+              placeholder="e.g. 2nd Cross Street, Gandhi Nagar"
               className="w-full p-3 sm:p-4 rounded-md bg-[#0f0f0f] text-white placeholder-gray-400 focus:outline-none"
             />
             {showErrors && errors.emergencyStreet && (
@@ -94,9 +69,9 @@ const Step2Emergency = ({ onNext, shake }) => {
 
             <input
               type="text"
-              placeholder="Enter city"
+              placeholder="e.g. Chennai"
               {...register("emergencyCity")}
-              className="w-full p-3 sm:p-4 rounded-md bg-[#0f0f0f] text-gray-200 focus:outline-none"
+              className="w-full p-3 sm:p-4 rounded-md bg-[#0f0f0f] text-gray-200 placeholder-gray-400 focus:outline-none"
             />
           </div>
 
@@ -108,11 +83,11 @@ const Step2Emergency = ({ onNext, shake }) => {
 
             <input
               type="text"
-              placeholder="Enter state"
+              placeholder="e.g. TamilNadu"
               {...register("emergencyState", {
                 onChange: () => clearErrors("emergencyState"),
               })}
-              className="w-full p-3 sm:p-4 rounded-md bg-[#0f0f0f] text-gray-200 focus:outline-none"
+              className="w-full p-3 sm:p-4 rounded-md bg-[#0f0f0f] text-gray-200 placeholder-gray-400 focus:outline-none"
             />
 
             {showErrors && errors.emergencyState && (
@@ -132,7 +107,7 @@ const Step2Emergency = ({ onNext, shake }) => {
               {...register("emergencyZip", {
                 onChange: () => clearErrors("emergencyZip"),
               })}
-              placeholder="ZIP Code"
+              placeholder="e.g. 600028"
               className="w-full p-3 sm:p-4 rounded-md bg-[#0f0f0f] text-white placeholder-gray-400 focus:outline-none"
             />
             {showErrors && errors.emergencyZip && (
@@ -152,7 +127,7 @@ const Step2Emergency = ({ onNext, shake }) => {
               {...register("emergencyPrimaryPhone", {
                 onChange: () => clearErrors("emergencyPrimaryPhone"),
               })}
-              placeholder="Primary Phone Number"
+              placeholder="e.g. 9123456789"
               className="w-full p-3 sm:p-4 rounded-md bg-[#0f0f0f] text-white placeholder-gray-400 focus:outline-none"
             />
             {showErrors && errors.emergencyPrimaryPhone && (
@@ -172,7 +147,7 @@ const Step2Emergency = ({ onNext, shake }) => {
               {...register("emergencyAlternatePhone", {
                 onChange: () => clearErrors("emergencyAlternatePhone"),
               })}
-              placeholder="Alternate Phone Number"
+              placeholder="e.g. 8765432109"
               className="w-full p-3 sm:p-4 rounded-md bg-[#0f0f0f] text-white placeholder-gray-400 focus:outline-none"
             />
           </div>
@@ -185,7 +160,7 @@ const Step2Emergency = ({ onNext, shake }) => {
 
             <select
               {...register("emergencyRelationship", {
-                onChange: () => clearErrors("emergencyRelationship"),
+                onChange: () => clearErrors("emergencyRelationship"), 
               })}
               className="w-full p-3 sm:p-4 rounded-md bg-[#0f0f0f] text-gray-200 appearance-none cursor-pointer focus:outline-none"
             >

@@ -26,13 +26,18 @@ const useEnrollmentForm = (setStep) => {
           grade: "",
         },
       ],
+      employmentType: "",
       employment: [
         {
           organization: "",
+          location: "",
+          workMode: "",
           designation: "",
           from: "",
           to: "",
           ctc: "",
+          payslip: null,
+          experienceCertificate: null,
         },
       ],
       declaration: false,
@@ -43,15 +48,52 @@ const useEnrollmentForm = (setStep) => {
     try {
       setIsSubmitting(true);
 
-      await submitToGoogle(data);
+      const folderId = methods.getValues("submissionFolderId");
+      const fullName = data.fullName;
 
-      setStep(6); // success page
+      if (Array.isArray(data.employment)) {
+        for (const employment of data.employment) {
+          if (employment.payslip) {
+            const payslipUpload = await uploadFilesToDrive(
+              employment.payslip,
+              fullName,
+              folderId,
+            );
+
+            employment.payslipLinks = payslipUpload?.links || [];
+          }
+
+          if (employment.experienceCertificate) {
+            const expUpload = await uploadFilesToDrive(
+              employment.experienceCertificate,
+              fullName,
+              folderId,
+            );
+
+            employment.experienceLinks = expUpload?.links || [];
+          }
+        }
+      }
+      
+      // To check data is passed to google sheets
+      // console.log("FINAL DATA:", data);
+
+      await submitToGoogle(data);
+      // show success notification
+      toast({
+        title: "Submission successful",
+        description: "Your information has been submitted successfully.",
+        variant: "success",
+        duration: 3000,
+      });
+
+      // go to success page
+      setStep(6);
     } catch (err) {
-      // console.error(err);
+      console.error("FINAL ERROR:", err);
       toast({
         title: "Submission failed",
-        description:
-         "Something went wrong while submitting your information.",
+        description: err.message || "Something went wrong.",
       });
     } finally {
       setIsSubmitting(false);

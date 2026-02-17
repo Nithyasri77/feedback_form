@@ -7,7 +7,8 @@ const TopBar = ({ onBack }) => {
   return (
     <div className="bg-[#000001] border-b border-gray-700 px-4 py-4">
       <div className="max-w-full sm:max-w-2xl mx-auto relative gap-4 flex justify-center items-center">
-
+       
+       {onBack && (
         <button
           type="button"
           onClick={onBack}
@@ -16,6 +17,7 @@ const TopBar = ({ onBack }) => {
           {/* back arrow svg */}
           <ArrowLeft size={28}/>
         </button>
+       )}
 
         <div className="flex justify-start items-center gap-3 mt-0 p-1.75">
           <div>
