@@ -25,7 +25,7 @@ const Step5Employment = ({ onNext, shake, isSubmitting }) => {
     setValue,
   } = useFormContext();
 
-  const { showErrors, setShowErrors } = useFormUI();
+  const { showErrors, setError } = useFormUI();
 
   const [openTerms, setOpenTerms] = useState(false);
 
