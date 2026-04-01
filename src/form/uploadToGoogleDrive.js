@@ -32,7 +32,7 @@ export async function uploadFilesToDrive(files, userName, folderId = null) {
   // console.log("Files converted to Base64");
 
   try {
-     const url = "https://script.google.com/macros/s/AKfycbytL3Pbossrp1eK2HEawv4FBpmZi0RsFr7mj9Zk9JVi_0snEbbBtPHr2DeNa-MYCMCt_g/exec";
+    // const url = "https://script.google.com/macros/s/AKfycbytL3Pbossrp1eK2HEawv4FBpmZi0RsFr7mj9Zk9JVi_0snEbbBtPHr2DeNa-MYCMCt_g/exec";
 
     const response = await fetch(url, {
       method: "POST",

@@ -1,6 +1,6 @@
 export async function submitToGoogle(data) {
   const response = await fetch(
-     "https://script.google.com/macros/s/AKfycbytL3Pbossrp1eK2HEawv4FBpmZi0RsFr7mj9Zk9JVi_0snEbbBtPHr2DeNa-MYCMCt_g/exec",
+    // "https://script.google.com/macros/s/AKfycbytL3Pbossrp1eK2HEawv4FBpmZi0RsFr7mj9Zk9JVi_0snEbbBtPHr2DeNa-MYCMCt_g/exec",
      {
     method: "POST",
     headers: {
