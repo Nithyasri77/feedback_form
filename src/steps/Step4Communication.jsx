@@ -3,7 +3,7 @@ import { useFormContext } from "react-hook-form";
 import { useFormUI } from "../context/FormUIContext";
 import { Star } from "lucide-react";
 
-const Step4Education = ({ onNext, shake }) => {
+const Step4Communication = ({ onNext, shake }) => {
   const {
     register,
     setValue,
@@ -168,4 +168,4 @@ const Step4Education = ({ onNext, shake }) => {
   );
 };
 
-export default Step4Education;
+export default Step4Communication;

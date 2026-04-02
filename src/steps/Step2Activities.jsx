@@ -3,7 +3,7 @@ import { useFormContext } from "react-hook-form";
 import { useFormUI } from "../context/FormUIContext";
 import { Star } from "lucide-react";
 
-const Step2Emergency = ({ onNext, shake }) => {
+const Step2Activities = ({ onNext, shake }) => {
   const {
     register,
     formState: { errors },
@@ -179,4 +179,4 @@ const Step2Emergency = ({ onNext, shake }) => {
   );
 };
 
-export default Step2Emergency;
+export default Step2Activities;

@@ -44,7 +44,7 @@ const Step1Personal = ({ onNext, shake }) => {
           </h1>
 
           <p className="text-lg sm:text-xl leading-relaxed mb-8">
-            Please fill out the form below to complete your employee enrollment.
+            Please fill out the form below to complete your Feedback Form.
           </p>
 
           <div className="space-y-4">

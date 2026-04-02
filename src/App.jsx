@@ -1,13 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { FormProvider } from "react-hook-form";
 import useEnrollmentForm from "./form/useEnrollmentForm";
 
 import Step1Personal from "./steps/Step1Personal";
-import Step2Emergency from "./steps/Step2Emergency";
-import Step3Bank from "./steps/Step3Bank";
-import Step4Education from "./steps/Step4Education";
-import Step5Employment from "./steps/Step5Employment";
+import Step2Activities from "./steps/Step2Activities";
+import Step3Mentorship from "./steps/Step3Mentorship";
+import Step4Communication from "./steps/Step4Communication";
+import Step5Management from "./steps/Step5Management";
+
+// 👉 NEW STEPS
+import Step6Feedback from "./steps/Step6Feedback";
+import Step7Compilance from "./steps/Step7Compilance";
+import Step8Document from "./steps/Step8Document";
+
 import SuccessCompletion from "./steps/SuccessCompletion";
+
 import TopBar from "./components/navigations/TopBar";
 import ProgressBar from "./components/navigations/ProgressBar";
 import { FormUIContext } from "./context/FormUIContext";
@@ -17,58 +24,69 @@ import { Toaster } from "./components/ui/toaster";
 const stepFields = {
   1: [
     "fullName",
-    "address",
-    "homePhone",
-    "email",
-    "panId",
-    "aadharNumber",
-    "birthDate",
-    "maritalStatus",
-    "proof",
+    "mobile",
+    "college",
+    "department",
+    "startDate",
+    "endDate",
+    "mode",
   ],
 
   2: [
-    "emergencyFullNameWithInitial",
-    "emergencyStreet",
-    "emergencyState",
-    "emergencyZip",
-    "emergencyPrimaryPhone",
+    "projects",
+    "roles",
+    "tools",
+    "resources",
+    "techRating",
   ],
 
   3: [
-    "bankName",
-    "accountHolderName",
-    "accountNumber",
-    "ifscCode",
-    "accountType",
+    "mentorAvailability",
+    "feedback",
+    "mentorRating",
+    "communicationRating",
   ],
 
   4: [
-    "education.0.level",
-    "education.0.field",
-    "education.0.institution",
-    "education.0.passingYear",
-    "education.0.grade",
+    "ideaCommunication",
+    "teamFeeling",
+    "coordination",
+    "learning",
+    "skills",
+    "careerAlign",
   ],
 
-  5: (values) => {
-    if (values.employmentType === "fresher") {
-      return ["declaration"];
-    }
- 
-    return [
-      "employment.0.organization",
-      "employment.0.location",
-      "employment.0.workMode",
-      "employment.0.designation",
-      "employment.0.from",
-      "employment.0.to",
-      "employment.0.ctc",
-      "employment.0.payslip",
-      "employment.0.experienceCertificate",
-      "declaration",
-    ];
-  },
+  5: [
+    "internshipStructure",
+    "deadlines",
+    "projectGoals",
+    "github",
+    "taskClarity",
+    "taskMeaningful",
+    "challenges",
+  ],
+
+  6: [
+    "takeaway",
+    "challengeSolution",
+    "improvements",
+    "futureInterest",
+    "recommend",
+    "source",
+    "workEnv",
+  ],
+
+  7: [
+    "handover",
+    "knowledgeShare",
+    "certificate",
+    "suggestions",
+    "overallRating",
+  ],
+
+  8: [
+    "documentsUpload"
+  ]
 };
 
 function App() {
@@ -79,27 +97,22 @@ function App() {
   const nextStep = async () => {
     form.setShowErrors(true);
 
-    const fieldsToValidate =
-      typeof stepFields[step] === "function"
-        ? stepFields[step](form.getValues())
-        : stepFields[step];
+    const fieldsToValidate = stepFields[step];
 
     const valid = await form.trigger(fieldsToValidate, {
       shouldFocus: false,
     });
 
     if (!valid) {
-      //  trigger shake
       setShakeForm(true);
-
-      // remove shake class after animation
       setTimeout(() => setShakeForm(false), 400);
       return;
     }
 
     form.setShowErrors(false);
 
-    if (step === 5) {
+    // ✅ FINAL SUBMIT AFTER PAGE 8
+    if (step === 8) {
       await form.onSubmit(form.getValues());
     } else {
       setStep(step + 1);
@@ -110,39 +123,65 @@ function App() {
     <div>
       <FormUIContext.Provider value={{ showErrors: form.showErrors }}>
         <FormProvider {...form}>
-          {/* TOP BAR */}
-          {step > 1 && step < 6 && <TopBar onBack={() => setStep(step - 1)} />}
 
-          {/* PROGRESS BAR */}
-          {step > 1 && step < 6 && (
+          {/* ✅ TOP BAR (NOW UPTO STEP 8) */}
+          {step > 1 && step < 9 && (
+            <TopBar onBack={() => setStep(step - 1)} />
+          )}
+
+          {/* ✅ PROGRESS BAR (NOW UPTO STEP 8) */}
+          {step > 1 && step < 9 && (
             <ProgressBar currentStep={step} setStep={setStep} />
           )}
 
           <BackgroundFileUploader currentStep={step} />
 
-          {/* STEP CONTENT */}
           <form onSubmit={form.handleSubmit(form.onSubmit)}>
+
             {step === 1 && (
               <Step1Personal onNext={nextStep} shake={shakeForm} />
             )}
+
             {step === 2 && (
-              <Step2Emergency onNext={nextStep} shake={shakeForm} />
+              <Step2Activities onNext={nextStep} shake={shakeForm} />
             )}
-            {step === 3 && <Step3Bank onNext={nextStep} shake={shakeForm} />}
+
+            {step === 3 && (
+              <Step3Mentorship onNext={nextStep} shake={shakeForm} />
+            )}
+
             {step === 4 && (
-              <Step4Education onNext={nextStep} shake={shakeForm} />
+              <Step4Communication onNext={nextStep} shake={shakeForm} />
             )}
+
             {step === 5 && (
-              <Step5Employment
+              <Step5Management
                 onNext={nextStep}
                 shake={shakeForm}
                 isSubmitting={form.isSubmitting}
               />
             )}
-            {step === 6 && <SuccessCompletion />}
+
+            {/* ✅ NEW PAGES */}
+            {step === 6 && (
+              <Step6Feedback onNext={nextStep} shake={shakeForm} />
+            )}
+
+            {step === 7 && (
+              <Step7Compilance onNext={nextStep} shake={shakeForm} />
+            )}
+
+            {step === 8 && (
+              <Step8Document onNext={nextStep} shake={shakeForm} />
+            )}
+
+            {/* SUCCESS PAGE */}
+            {step === 9 && <SuccessCompletion />}
+
           </form>
         </FormProvider>
       </FormUIContext.Provider>
+
       <Toaster />
     </div>
   );

@@ -3,7 +3,7 @@ import { useFormContext } from "react-hook-form";
 import { useFormUI } from "../context/FormUIContext";
 import { Star } from "lucide-react";
 
-const Step3Bank = ({ onNext, shake }) => {
+const Step3Mentorship = ({ onNext, shake }) => {
   const {
     register,
     formState: { errors },
@@ -209,4 +209,4 @@ const Step3Bank = ({ onNext, shake }) => {
   );
 };
 
-export default Step3Bank;
+export default Step3Mentorship;
