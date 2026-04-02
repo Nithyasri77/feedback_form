@@ -9,9 +9,9 @@ import Step4Communication from "./steps/Step4Communication";
 import Step5Management from "./steps/Step5Management";
 
 // 👉 NEW STEPS
-import Step6Feedback from "./steps/Step6Feedback";
-import Step7Compilance from "./steps/Step7Compilance";
-import Step8Document from "./steps/Step8Document";
+import step6Feedback from "./steps/step6Feedback";
+import step7Compilance from "./steps/step7Compilance";
+import step8Document from "./steps/step8Document";
 
 import SuccessCompletion from "./steps/SuccessCompletion";
 
@@ -164,15 +164,15 @@ function App() {
 
             {/* ✅ NEW PAGES */}
             {step === 6 && (
-              <Step6Feedback onNext={nextStep} shake={shakeForm} />
+              <step6Feedback onNext={nextStep} shake={shakeForm} />
             )}
 
             {step === 7 && (
-              <Step7Compilance onNext={nextStep} shake={shakeForm} />
+              <step7Compilance onNext={nextStep} shake={shakeForm} />
             )}
 
             {step === 8 && (
-              <Step8Document onNext={nextStep} shake={shakeForm} />
+              <step8Document onNext={nextStep} shake={shakeForm} />
             )}
 
             {/* SUCCESS PAGE */}
