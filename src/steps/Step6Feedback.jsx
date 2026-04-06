@@ -117,18 +117,13 @@ const Step6Feedback = ({ onNext, shake }) => {
             </label>
 
             {[
-              "Facebook",
+  
               "Instagram",
               "LinkedIn",
-              "YouTube",
-              "WhatsApp Status",
-              "WhatsApp Forward/Group",
               "College/Institution Reference",
               "Faculty Recommendation",
               "Word of Mouth / Friend",
               "Online Search",
-              "Workshop/Event",
-              "Client/Customer",
               "Email",
             ].map((opt) => (
               <label key={opt} className="flex items-center gap-2">
@@ -147,7 +142,34 @@ const Step6Feedback = ({ onNext, shake }) => {
               className="w-full mt-2 p-3 sm:p-4 rounded-md bg-[#0f0f0f] text-white placeholder-gray-400 focus:outline-none"
             />
           </div>
+           <div className="mb-4">
+            <label className="block mb-2 font-medium" >
+              Did you post anything about this internship?
+            </label>
+               {[
+  
+              "Instagram",
+              "LinkedIn",
+              "Indeed",
+            ].map((opt) => (
+              <label key={opt} className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  value={opt}
+                  {...register("source")}
+                />
+                {opt}
+              </label>
+            ))}
 
+            <input
+              {...register("otherSource")}
+              placeholder="Other..."
+              className="w-full mt-2 p-3 sm:p-4 rounded-md bg-[#0f0f0f] text-white placeholder-gray-400 focus:outline-none"
+            />
+          </div>
+
+          
           {/* WORK CULTURE */}
           <h2 className="text-xl font-semibold mt-6 mb-4">
             Work Culture
