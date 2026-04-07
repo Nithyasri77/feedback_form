@@ -5,7 +5,7 @@ import path from "path";
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: "/YOUR_REPO_NAME/",  // 👈 ADD THIS LINE
+  base: "feedback_form",  // 👈 ADD THIS LINE
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
