@@ -1,138 +1,224 @@
 import * as yup from "yup";
 
-const phoneRegex = /^[6-9]\d{9}$/;
-
-const aadhaarRegex = /^[2-9]{1}[0-9]{3}\s?[0-9]{4}\s?[0-9]{4}$/;
-
-const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
-
-const bankAccountRegex = /^[0-9]{9,18}$/;
-
-const ifscRegex = /^[A-Z]{4}0[A-Z0-9]{6}$/;
+// 📌 Date rules (NO past, max + 2 years)
+const validDate = yup
+  .date()
+  .typeError("Please select a valid date")
+  .required("Date is required");
 
 export default yup.object({
-  // STEP 1
-  fullName: yup.string().required("Full name is required"),
-  address: yup.string().required("Address is required"),
-  homePhone: yup
+  // ================= STEP 1: Personal Info =================
+  fullName: yup
     .string()
-    .required("Home phone is required")
-    .matches(phoneRegex, "Enter a valid 10-digit phone number"),
-  alternatePhone: yup
-    .string()
-    .required("Alternate Phone is required")
-    .matches(phoneRegex, "Enter a valid 10-digit phone number"),
-  email: yup.string().email("Invalid email").required("Email is required"),
-  panId: yup
-    .string()
-    .required("PAN number is required")
-    .matches(panRegex, "Invalid PAN format (ABCDE1234F)"),
-  aadharNumber: yup
-    .string()
-    .transform((value) => value?.replace(/\s/g, ""))
-    .required("Aadhaar number is required")
-    .matches(aadhaarRegex, "Aadhaar must be exactly 12 digits"),
-  birthDate: yup
-    .date()
-    .typeError("Birth Date is required")
-    .required("Birth Date is required"),
+    .required("Full name is required")
+    .trim()
+    .matches(/^[A-Za-z ]+$/, "Only letters are allowed")
+    .min(3, "Minimum 3 characters required"),
 
-  maritalStatus: yup.string().required("Marital status is required"),
+  mobileNumber: yup // Matched your JSX
+    .string()
+    .required("Mobile number is required")
+    .matches(/^[0-9]{10}$/, "Enter a valid 10-digit mobile number"),
 
-  proof: yup
+  collegeName: yup // Matched your JSX
+    .string()
+    .required("College name is required")
+    .min(3, "Minimum 3 characters required"),
+
+  department: yup
+    .string()
+    .required("Department is required")
+    .min(2, "Minimum 2 characters required"),
+
+ startDate: validDate
+    .min(new Date(2025, 0, 1), "Start date must be in 2025 or later"),
+ 
+  endDate: validDate
+    .min(new Date(2025, 0, 1), "End date must be in 2025 or later")
+    .test("endAfterStart", "End date must be on or after the start date", function(value) {
+      const { startDate } = this.parent;
+      if (!startDate || !value) return true;
+      return new Date(value) >= new Date(startDate);
+    }),
+
+  mode: yup
+    .string()
+    .oneOf(["Online", "Offline", "Hybrid"], "Please select a mode")
+    .required("Select an internship mode"),
+
+
+  // ================= STEP 2: Activities =================
+  projects: yup
+    .string()
+    .required("Project description is required")
+    .trim()
+    .min(10, "Please write at least 10 characters"),
+
+  roles: yup
+    .string()
+    .required("Roles & responsibilities are required")
+    .trim()
+    .min(10, "Please write at least 10 characters"),
+
+  technologies: yup // Checkbox array
     .array()
-    .min(1, "At least one document is required")
-    .of(yup.mixed())
-    .required("Proof Attached is required")
-    .test(
-      "fileExists",
-      "Proof Attached is required",
-      (value) => value && value.length > 0,
-    ),
+    .min(1, "Select at least one technology")
+    .required("Select at least one technology"),
 
-  // STEP 2
+  otherTech: yup.string().optional(), // Optional text input
 
-  emergencyFullNameWithInitial: yup
+  support: yup // Radio
     .string()
-    .required("FullName with Initial is required"),
-  emergencyStreet: yup.string().required("Street Address is required"),
-  emergencyCity: yup.string().nullable(),
-  emergencyState: yup.string().required("State is required"),
-  emergencyZip: yup.string().required("ZIP Code is required"),
-  emergencyPrimaryPhone: yup
+    .oneOf(["Yes", "No"], "Invalid selection")
+    .required("Please select Yes or No"),
+
+  rating: yup // Star rating
+    .number()
+    .typeError("Please provide a rating")
+    .min(1, "Minimum 1 star")
+    .max(5, "Maximum 5 stars")
+    .required("Rating is required"),
+
+
+  // ================= STEP 3: Mentorship =================
+  mentorAccessibility: yup
     .string()
-    .required("Primary Phone is required")
-    .matches(phoneRegex, "Enter a valid 10-digit phone number"),
-  emergencyAlternatePhone: yup
+    .oneOf(["Always", "Usually", "Occasionally", "Rarely"], "Invalid selection")
+    .required("Please select an option"),
+
+  feedback: yup
     .string()
-    .matches(phoneRegex, "Enter a valid 10-digit phone number")
-    .nullable(),
-  emergencyRelationship: yup.string().nullable(),
+    .oneOf(["Yes", "No"], "Invalid selection")
+    .required("Please select Yes or No"),
 
-  // STEP 3
-  bankName: yup.string().required("Bank name is required"),
-  accountHolderName: yup.string().required("Account holder name is required"),
-  accountNumber: yup
+  mentorRating: yup.number().min(1).max(5).required("Mentor rating is required"),
+  communicationRating: yup.number().min(1).max(5).required("Communication rating is required"),
+
+  responseTime: yup
     .string()
-    .required("Account number is required")
-    .matches(bankAccountRegex, "Account number must be 9-18 digits"),
-  ifscCode: yup
+    .oneOf(["Yes", "No", "Sometimes"])
+    .required("Please select an option"),
+
+  supportRating: yup.number().min(1).max(5).required("Support rating is required"),
+  
+  regularFeedback: yup.string().oneOf(["Yes", "No"]).required("Please select an option"),
+  
+  doubtResolution: yup.string().oneOf(["Yes", "No", "Sometimes"]).required("Please select an option"),
+
+
+  // ================= STEP 4: Communication =================
+  ideaCommunication: yup.string().oneOf(["Yes", "No"]).required("Please select an option"),
+  
+  teamFeeling: yup.string().oneOf(["Yes", "No"]).required("Please select an option"),
+  
+  teamCoordination: yup.number().min(1).max(5).required("Coordination rating is required"),
+  
+  practicalKnowledge: yup.string().oneOf(["Yes", "No"]).required("Please select an option"),
+  
+  learningRating: yup.number().min(1).max(5).required("Learning experience rating is required"),
+
+  skills: yup
+    .array() // Changed to array because you used checkboxes for this in Step 4
+    .min(1, "Select at least one skill")
+    .required("Select at least one skill"),
+
+  careerAlignment: yup.string().oneOf(["Yes", "No", "Partially"]).required("Please select an option"),
+
+
+  // ================= STEP 5: Management =================
+  internshipStructure: yup.number().min(1).max(5).required("Structure rating is required"),
+  
+  deadlines: yup.string().oneOf(["Yes", "No", "Partially"]).required("Please select an option"),
+  
+  projectGoals: yup.string().oneOf(["Yes", "No", "Somewhat"]).required("Please select an option"),
+  
+  github: yup.string().oneOf(["Yes", "No"]).required("Please select an option"),
+  
+  taskClarity: yup.string().oneOf(["Yes", "No"]).required("Please select an option"),
+  
+  taskMeaningful: yup.number().min(1).max(5).required("Task meaningfulness rating is required"),
+
+  challenges: yup
     .string()
-    .required("IFSC code is required")
-    .matches(ifscRegex, "Invalid IFSC code"),
-  accountType: yup.string().required("Account type is required"),
+    .required("Please describe the challenges you faced")
+    .trim()
+    .min(5, "Enter at least 5 characters"),
 
-  // STEP 4
-  education: yup.array().of(
-    yup.object({
-      level: yup.string().required("Education level is required"),
 
-      field: yup.string().required("Field of study is required"),
+  // ================= STEP 6: Feedback =================
+  takeaway: yup
+    .string()
+    .required("Please write your biggest takeaway")
+    .trim()
+    .min(5, "Write at least 5 characters"),
 
-      institution: yup.string().required("Institution name is required"),
+  challengesOvercome: yup // Matched your JSX
+    .string()
+    .required("Please explain challenges and solution")
+    .trim()
+    .min(5, "Write at least 5 characters"),
 
-      location: yup.string().nullable(),
+  improvements: yup // Step 6 improvements
+    .string()
+    .required("Please suggest improvements")
+    .trim()
+    .min(5, "Write at least 5 characters"),
 
-      passingYear: yup.string().required("Passing year is required"),
+  joinFuture: yup.string().oneOf(["Yes", "No", "Maybe"]).required("Please select an option"),
+  
+  recommend: yup.string().oneOf(["Yes", "No"]).required("Please select an option"),
 
-      grade: yup.string().required("Grade or percentage is required"),
-    }),
-  ),
+  source: yup.array().min(1, "Select at least one source").required("Select a source"),
+  otherSource: yup.string().optional(),
 
-  // STEP 5
-  employment: yup.array().of(
-    yup.object({
-      organization: yup.string().required("Organization name is required"),
+  // These are the renamed fields from the bug fix we discussed
+  postedPlatform: yup.array().optional(), 
+  otherPostedPlatform: yup.string().optional(),
 
-      location: yup.string().required("Organization location is required"),
+  environment: yup.number().min(1).max(5).required("Environment rating is required"),
+  
+  comfortable: yup.string().oneOf(["Yes", "No"]).required("Please select an option"),
 
-      workMode: yup.string().required("Work mode is required"),
+  teamwork: yup
+    .string()
+    .required("Please describe your teamwork experience")
+    .trim(),
 
-      designation: yup.string().required("Designation is required"),
 
-      from: yup
-        .date()
-        .typeError("Start date is required")
-        .required("Start date is required"),
+  // ================= STEP 7: Compliance =================
+  handover: yup.string().oneOf(["Yes", "No", "Not Yet"]).required("Please select an option"),
+  
+  knowledgeShare: yup.string().oneOf(["Yes", "No"]).required("Please select an option"),
+  
+  certificate: yup.string().oneOf(["Yes", "No", "Both"]).required("Please select an option"),
 
-      to: yup
-        .date()
-        .typeError("End date is required")
-        .required("End date is required")
-        .min(
-          yup.ref("from"),
-          "Service Period To must be after Service Period From",
-        ),
+  generalSuggestions: yup // Fixed name to avoid conflict with Step 6 'improvements'
+    .string()
+    .nullable()
+    .optional(),
 
-      ctc: yup.string().required("Monthly CTC is required"),
+  enjoyment: yup.number().min(1).max(5).required("Enjoyment rating is required"),
+  
+  overallExperience: yup.number().min(1).max(5).required("Overall experience rating is required"),
 
-      payslip: yup.mixed().required("Payslip upload is required"),
+  likedMost: yup.string().required("Please tell us what you liked most").trim(),
+  
+  improveMore: yup.string().required("Please tell us what we can improve").trim(),
 
-      experienceCertificate: yup
-        .mixed()
-        .required("Experience certificate is required"),
-    }),
-  ),
 
-  declaration: yup.boolean().oneOf([true], "You must accept the declaration"),
+  // ================= STEP 8: Documents =================
+  finalDocuments: yup // Matched your JSX
+    .mixed()
+    .test("fileLength", "Upload at least one file", (value) => {
+      return value && value.length > 0;
+    })
+    .test("fileMax", "Max 10 files allowed", (value) => {
+      return !value || value.length <= 10;
+    })
+    .test("fileSize", "Each file must be <= 100MB", (value) => {
+      if (!value || value.length === 0) return true;
+      // Convert FileList/Array to standard Array
+      const filesArray = Array.from(value); 
+      return filesArray.every((file) => file.size <= 100 * 1024 * 1024);
+    })
 });

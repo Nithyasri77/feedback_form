@@ -1,25 +1,22 @@
 export async function submitToGoogle(data) {
-  const response = await fetch(
-    // "https://script.google.com/macros/s/AKfycbytL3Pbossrp1eK2HEawv4FBpmZi0RsFr7mj9Zk9JVi_0snEbbBtPHr2DeNa-MYCMCt_g/exec",
-     {
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby7EdZ2dpCTifFZuFNMyrwAr50Q9Z0OXR4Bzh42ZGd21PCCpgtQWUz3ivQpYuvm_lGOzA/exec"; // ← Replace after deploying
+
+  const response = await fetch(SCRIPT_URL, {
     method: "POST",
-    headers: {
-      "Content-Type": "text/plain",
-    },
+    headers: { "Content-Type": "text/plain" },
     body: JSON.stringify(data),
   });
 
   if (!response.ok) {
-    throw new Error("Network response was not ok");
+    throw new Error(`Network error: ${response.status}`);
   }
 
   const text = await response.text();
 
   let result;
-
   try {
     result = JSON.parse(text);
-  } catch (err) {
+  } catch {
     throw new Error("Invalid JSON response from server");
   }
 
@@ -29,4 +26,3 @@ export async function submitToGoogle(data) {
 
   return result;
 }
-

@@ -12,19 +12,14 @@ const SuccessCompletion = () => {
       <div className="flex flex-col items-center justify-center px-6 py-12">
         <div className="bg-[#1f2937] p-8 rounded-2xl shadow-xl text-center max-w-md w-full">
           <h1 className="text-4xl sm:text-5xl font-normal font-stylefont mb-5">
-           Welcome Aboard!
+           Thank you for working with us!
           </h1>
 
-          <p className="text-gray-300 leading-relaxed mb-6">
-            You journey with <br/> 
-            <span className="font-stylefont2 text-xl sm:text-xl text-white">Shine Craft technologies</span>
-            <br />
-            begins here.
-          </p>
+         
 
           <p className="text-gray-300 leading-relaxed mb-3">
-            Together, we grow, innovate,<br /> 
-            and build meaningful impact.
+            Together, we grew, innovated,<br /> 
+            and built meaningful impact.
           </p>
         </div>
 

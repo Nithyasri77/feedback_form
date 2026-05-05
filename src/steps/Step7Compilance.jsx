@@ -7,26 +7,22 @@ const Step7Compilance = ({ onNext, shake }) => {
   const { register, setValue } = useFormContext();
   const { showErrors } = useFormUI();
 
-  const [enjoyRating, setEnjoyRating] = useState(0);
+  const [enjoyRating, setEnjoyRating]     = useState(0);
   const [overallRating, setOverallRating] = useState(0);
 
   return (
     <div className="min-h-screen bg-[#000001] text-white overflow-x-hidden">
       <div className="max-w-md sm:max-w-lg px-4 sm:px-6 mx-auto pt-4 pb-8">
 
-        {/* TITLE */}
-        <h1 className="text-2xl font-semibold mb-6">
-          Compliance and Exit
-        </h1>
+        <h1 className="text-2xl font-semibold mb-6">Compliance and Exit</h1>
 
         <div className={`bg-[#1a1a1a] rounded-md p-6 shadow-lg ${shake ? "shake" : ""}`}>
 
           {/* DOCUMENT HANDOVER */}
           <div className="mb-4">
             <label className="block mb-2 font-medium">
-              Did you hand over all the required documents and login credentials?
+              Did you hand over all required documents and login credentials?
             </label>
-
             {["Yes", "No", "Not Yet"].map((opt) => (
               <label key={opt} className="flex items-center gap-2">
                 <input type="radio" value={opt} {...register("handover")} />
@@ -40,7 +36,6 @@ const Step7Compilance = ({ onNext, shake }) => {
             <label className="block mb-2 font-medium">
               Do you agree to share the knowledge gained with future team members?
             </label>
-
             {["Yes", "No"].map((opt) => (
               <label key={opt} className="flex items-center gap-2">
                 <input type="radio" value={opt} {...register("knowledgeShare")} />
@@ -54,7 +49,6 @@ const Step7Compilance = ({ onNext, shake }) => {
             <label className="block mb-2 font-medium">
               Do you need a recommendation letter or certificate?
             </label>
-
             {["Yes", "No", "Both"].map((opt) => (
               <label key={opt} className="flex items-center gap-2">
                 <input type="radio" value={opt} {...register("certificate")} />
@@ -63,26 +57,24 @@ const Step7Compilance = ({ onNext, shake }) => {
             ))}
           </div>
 
-          {/* IMPROVEMENT TEXT */}
+          {/* GENERAL SUGGESTIONS — ✅ Fixed: was "improvements" (conflicts with Step 6) */}
           <div className="mb-4">
             <label className="block mb-2 font-medium">
-              Suggestions / Improvements
+              Any general suggestions or improvements?
             </label>
-
             <textarea
-              {...register("improvements")}
+              {...register("generalSuggestions")}
               placeholder="Share your suggestions..."
               rows={3}
               className="w-full p-3 rounded-md bg-[#0f0f0f] text-white"
             />
           </div>
 
-          {/* HEART RATING */}
+          {/* ENJOYMENT — Heart rating */}
           <div className="mb-4">
             <label className="block mb-2 font-medium">
-              Tell us how much you enjoyed being part of our team!
+              How much did you enjoy being part of our team?
             </label>
-
             <div className="flex gap-2">
               {[1, 2, 3, 4, 5].map((heart) => (
                 <Heart
@@ -102,10 +94,7 @@ const Step7Compilance = ({ onNext, shake }) => {
 
           {/* OVERALL RATING */}
           <div className="mb-4">
-            <label className="block mb-2 font-medium">
-              Overall internship experience
-            </label>
-
+            <label className="block mb-2 font-medium">Overall internship experience</label>
             <div className="flex gap-2">
               {[1, 2, 3, 4, 5].map((star) => (
                 <Star
@@ -123,12 +112,9 @@ const Step7Compilance = ({ onNext, shake }) => {
             </div>
           </div>
 
-          {/* LIKE MOST */}
+          {/* LIKED MOST */}
           <div className="mb-4">
-            <label className="block mb-2 font-medium">
-              What did you like most?
-            </label>
-
+            <label className="block mb-2 font-medium">What did you like most?</label>
             <textarea
               {...register("likedMost")}
               placeholder="Write here..."
@@ -137,12 +123,9 @@ const Step7Compilance = ({ onNext, shake }) => {
             />
           </div>
 
-          {/* IMPROVE */}
+          {/* IMPROVE MORE */}
           <div className="mb-4">
-            <label className="block mb-2 font-medium">
-              What can we improve?
-            </label>
-
+            <label className="block mb-2 font-medium">What can we improve?</label>
             <textarea
               {...register("improveMore")}
               placeholder="Write here..."
@@ -150,10 +133,9 @@ const Step7Compilance = ({ onNext, shake }) => {
               className="w-full p-3 rounded-md bg-[#0f0f0f] text-white"
             />
           </div>
-
         </div>
 
-        {/* NEXT BUTTON */}
+        {/* NEXT */}
         <div className="mt-7 mb-8">
           <button
             type="button"
@@ -163,7 +145,6 @@ const Step7Compilance = ({ onNext, shake }) => {
             Next
           </button>
         </div>
-
       </div>
     </div>
   );
